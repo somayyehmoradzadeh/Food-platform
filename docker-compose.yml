@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: food_db
+    environment:
+      POSTGRES_DB: food
+      POSTGRES_USER: food
+      POSTGRES_PASSWORD: food
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: food_redis
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    container_name: food_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+
+  celery:
+    build: ./backend
+    command: celery -A config worker -l info
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+
+volumes:
+  pgdata:
