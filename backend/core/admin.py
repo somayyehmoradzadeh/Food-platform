@@ -45,12 +45,18 @@ class OrderItemInline(admin.TabularInline):
 
 
 @admin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(GISModelAdmin):
     list_display = ('id', 'user', 'restaurant', 'status', 'total_price', 'eta_min', 'created_at')
     list_filter = ('status', 'restaurant')
     search_fields = ('user__username', 'restaurant__name')
     inlines = [OrderItemInline]
+    readonly_fields = ('eta_min', 'eta')
     ordering = ('-created_at',)
+    map_width = 800
+    map_height = 500
+    default_lon = 51.3947535
+    default_lat = 35.6223657
+    default_zoom = 12
 
 
 @admin.register(TableReservation)
@@ -77,7 +83,9 @@ class RestaurantAdmin(GISModelAdmin):
     list_filter = ('is_open',)
     map_width = 800
     map_height = 500
-    default_lon = 51.3890
-    default_lat = 35.6892
+    default_lon = 51.3947535
+    default_lat = 35.6223657
     default_zoom = 12
+
+
 

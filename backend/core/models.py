@@ -23,6 +23,7 @@ class Restaurant(models.Model):
     address = models.CharField(max_length=500)
     location = models.PointField(geography=True)
     delivery_radius_m = models.IntegerField(default=5000)
+    base_prep_time_min = models.PositiveIntegerField(default=20)
     is_open = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -79,6 +80,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     eta_min = models.PositiveIntegerField(default=30)
+    eta = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -173,7 +175,6 @@ class Payment(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
-    payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD_CHOICES, default='cash')
     def __str__(self):
         return f"Payment #{self.id} - {self.order.id} - {self.status}"
 
