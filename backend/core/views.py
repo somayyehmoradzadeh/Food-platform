@@ -12,6 +12,37 @@ from .permissions import IsRestaurantOwner, IsOrderOwner
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
+class DashboardAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        profile = getattr(user, "userprofile", None)
+
+        if profile and profile.is_restaurant:
+            # رستوران: اطلاعات سفارش‌ها و آمار
+            orders = Order.objects.filter(restaurant__user=user)
+            data = {
+                "username": user.username,
+                "is_restaurant": True,
+                "orders_today": orders.filter(status="delivered").count(),
+                "active_orders": orders.filter(status="pending").count(),
+                "total_revenue": sum([o.total for o in orders]),
+            }
+        else:
+            # کاربر عادی: لیست رستوران‌ها
+            restaurants = Restaurant.objects.all()
+            rest_list = [
+                {"id": r.id, "name": r.name, "image": r.img.url if r.img else "", "rating": r.rate}
+                for r in restaurants
+            ]
+            data = {
+                "username": user.username,
+                "is_restaurant": False,
+                "restaurants": rest_list,
+            }
+
+        return Response(data)
 
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()

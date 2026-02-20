@@ -15,7 +15,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view()),
     # Payment
     path('verify-payment/', VerifyPaymentAPIView.as_view(), name='verify-payment'),
-
+    path('dashboard/', DashboardAPIView.as_view(), name='dashboard'),
     # Update order status (restaurant)
     path('update-order-status/', UpdateOrderStatusAPIView.as_view(), name='update-order-status'),
     path('', include(router.urls)),

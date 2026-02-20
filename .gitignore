@@ -77,3 +77,91 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
+
+
+# -----------------------
+# General / OS
+# -----------------------
+
+
+
+# -----------------------
+# Python / Django
+# -----------------------
+# Byte-compiled / cache
+pycache/
+
+*$py.class
+
+# Virtualenv
+.venv/
+env.bak/
+venv*/
+
+
+
+
+*.pyd
+local_settings.py
+db.sqlite3
+/media/
+
+# If you store collectstatic output somewhere else, add it:
+# /staticfiles/
+
+# Coverage / test
+
+.tox/
+
+
+# celery
+celerybeat-schedule
+celerybeat.pid
+
+# Secrets / env
+
+.env.local
+.env.*.local
+secret_key.txt
+credentials.json
+
+# -----------------------
+# Node / Frontend (Vite, CRA, etc.)
+# -----------------------
+# Node modules
+
+**/node_modules/
+
+# build output
+
+.vite/
+*.tgz
+
+# logs
+
+pnpm-debug.log*
+
+# local env for frontend
+/frontend/.env
+/frontend/.env.local
+# if you want to ignore lockfile (usually you shouldn't) uncomment:
+# package-lock.json
+# yarn.lock
+
+
+
+# docker volumes, compose temp files
+.env.dev.local
+docker-sync.yml
+
+# -----------------------
+# Misc
+# -----------------------
+
+*.bak
+*.swp
+*.tmp
+
+
+# VS Code workspace settings
+*.code-workspace
