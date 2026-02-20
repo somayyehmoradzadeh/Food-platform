@@ -24,7 +24,6 @@ class UserAdmin(BaseUserAdmin):
     )
 
 
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'restaurant', 'order')
@@ -75,7 +74,6 @@ class PaymentAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 
-
 @admin.register(Restaurant)
 class RestaurantAdmin(GISModelAdmin):
     list_display = ('name', 'owner', 'is_open', 'delivery_radius_m')
@@ -88,4 +86,8 @@ class RestaurantAdmin(GISModelAdmin):
     default_zoom = 12
 
 
-
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'is_read', 'created_at')
+    list_filter = ('is_read',)
+    search_fields = ('user', 'message', 'is_read')

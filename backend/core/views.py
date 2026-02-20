@@ -1,4 +1,9 @@
 from rest_framework import generics, viewsets, permissions
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from .serializers import *
 from .models import Category, MenuItem
 from .permissions import IsRestaurantOwner, IsOrderOwner
@@ -55,3 +60,83 @@ class TableReservationViewSet(viewsets.ModelViewSet):
             return TableReservation.objects.filter(user=user)
         # رستوران، همه رزروها رو می‌بینه
         return TableReservation.objects.filter(restaurant__owner=user)
+
+
+
+class VerifyPaymentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        order_id = request.data.get("order_id")
+
+        payment = Payment.objects.get(order_id=order_id)
+
+        # اینجا شبیه‌سازی gateway
+        payment.status = "success"
+        payment.transaction_id = "TXN123456"
+        payment.authority="sdsfsfpk;fvxv"
+        payment.ref_id="sdsfsfpk;fvxv"
+        payment.paid_at = timezone.now()
+        payment.save()
+
+        # تغییر وضعیت Order
+        payment.order.status = "confirmed"
+        payment.order.save(update_fields=["status"])
+        create_notification.delay(
+            payment.order.user.id,
+            f"Your payment for order {payment.order.id} was successful."
+        )
+
+        return Response({"detail": "Payment verified successfully"})
+
+
+class RestaurantOrderViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Order.objects.filter(restaurant__owner=self.request.user)
+
+
+
+
+class UpdateOrderStatusAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        order_id = request.data.get("order_id")
+        new_status = request.data.get("status")
+
+        order = Order.objects.get(
+            id=order_id,
+            restaurant__owner=request.user
+        )
+
+        order.status = new_status
+        order.save(update_fields=["status"])
+        create_notification.delay(
+            order.user.id,
+            f"Your order {order.id} is now {order.status}."
+        )
+        channel_layer = get_channel_layer()
+
+        async_to_sync(channel_layer.group_send)(
+            f"order_{order.id}",
+            {
+                "type": "send_order_update",
+                "data": {
+                    "order_id": order.id,
+                    "status": order.status
+                }
+            }
+        )
+
+        return Response({"detail": "Status updated"})
+
+
+class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user).order_by("-created_at")

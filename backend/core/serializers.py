@@ -2,7 +2,7 @@ import math
 from datetime import timedelta
 
 from django.utils import timezone
-from core.tasks import calculate_order_eta, print_order_receipt
+from core.tasks import create_notification, print_order_receipt,auto_cancel_unpaid_order
 
 from django.contrib.gis.geos import Point
 from rest_framework import serializers
@@ -132,6 +132,15 @@ class OrderSerializer(serializers.ModelSerializer):
 
         # ---------- اجرای Celery فقط برای print_receipt ----------
         print_order_receipt.delay(order.id)
+        create_notification.delay(
+            order.restaurant.owner.id,
+            f"New order #{order.id} has been placed."
+        )
+        if payment_method == "online":
+            auto_cancel_unpaid_order.apply_async(
+                (order.id,),
+                countdown=600  # 10 minutes
+            )
         return order
 
 
@@ -146,3 +155,10 @@ class TableReservationSerializer(serializers.ModelSerializer):
         model = TableReservation
         fields = '__all__'
 
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = "__all__"
+        read_only_fields = ["user", "created_at"]

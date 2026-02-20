@@ -8,3 +8,6 @@ redis
 django-redis
 djangorestframework-simplejwt
 Pillow
+daphne
+channels
+channels-redis

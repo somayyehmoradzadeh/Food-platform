@@ -24,6 +24,8 @@ class Restaurant(models.Model):
     location = models.PointField(geography=True)
     delivery_radius_m = models.IntegerField(default=5000)
     base_prep_time_min = models.PositiveIntegerField(default=20)
+    rate = models.FloatField(default=0)
+    img = models.ImageField(default='default.jpg', upload_to='restaurants')
     is_open = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -67,10 +69,12 @@ class MenuItem(models.Model):
 class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
         ('preparing', 'Preparing'),
-        ('delivering', 'Delivering'),
-        ('completed', 'Completed'),
-        ('canceled', 'Canceled'),
+        ('ready', 'Ready'),
+        ('on_the_way', 'On The Way'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
@@ -175,7 +179,16 @@ class Payment(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
+
     def __str__(self):
         return f"Payment #{self.id} - {self.order.id} - {self.status}"
 
 
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user}"
