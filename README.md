@@ -192,3 +192,34 @@ urlpatterns += [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
 ```
+
+Useful admin / API checks (curl examples)
+Obtain JWT token:
+```bash
+curl -X POST http://127.0.0.1:8000/api/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"secret"}'
+# result contains access and refresh tokens
+```
+Get current user info (protected):
+```bash
+curl http://127.0.0.1:8000/api/user/ -H "Authorization: Bearer <ACCESS_TOKEN>"
+```
+Place an order:
+```bash
+curl -X POST http://127.0.0.1:8000/api/orders/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -d '{"restaurant":1, "items":[{"name":"Pizza","qty":1,"price":9.9}], "latitude":35.7, "longitude":51.4, "total":9.9}'
+```
+Create a reservation:
+```bash
+curl -X POST http://127.0.0.1:8000/api/reservations/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -d '{"restaurant":1,"guest_name":"Ali","date":"2026-03-10","time":"19:30:00","guests":4}'
+```
+Check Celery tasks endpoint (if implemented):
+```bash
+curl http://127.0.0.1:8000/api/notifications/unread_count/ -H "Authorization: Bearer <ACCESS_TOKEN>"
+```
