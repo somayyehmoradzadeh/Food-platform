@@ -2,6 +2,24 @@
 
 This README explains step-by-step how to run the full project locally and with Docker: backend (Django + DRF + JWT), Celery (worker + optionally beat), message broker (Redis), database (Postgres or SQLite), and frontend (React / Vite). Follow the section that matches how you want to run it (Docker recommended).
 
+
+## 📸 Screenshots
+
+> Screenshots are located in the `backend/screenshots/` folder.
+
+### Home Page (Guest)
+![Home Guest](backend/screenshots/home.png)
+
+### Login
+![Login](backend/screenshots/login.png)
+
+### Register
+![Register](backend/screenshots/register.png)
+
+### Dashboard
+![Dashboard](backend/screenshots/dashboard.png)
+
+
 Quick overview
 
 Backend: Django + Django REST Framework, JWT auth (SimpleJWT)
@@ -223,3 +241,4 @@ Check Celery tasks endpoint (if implemented):
 ```bash
 curl http://127.0.0.1:8000/api/notifications/unread_count/ -H "Authorization: Bearer <ACCESS_TOKEN>"
 ```
+
