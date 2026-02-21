@@ -1,0 +1,161 @@
+.rd-page {
+  background: #f5f7fa;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* HERO */
+.rd-hero {
+  height: 350px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.rd-hero-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0.3));
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 50px;
+  color: white;
+}
+
+.rd-hero-overlay h1 {
+  font-size: 42px;
+  margin: 0;
+}
+
+.rd-hero-overlay p {
+  margin-top: 10px;
+  max-width: 600px;
+  opacity: 0.9;
+}
+
+/* ⭐ rating & status */
+.rd-meta {
+  margin-top: 15px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* INFO BAR FIXED */
+.rd-info-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+
+  background: white;
+  padding: 25px 40px;
+
+  margin: 30px auto 0 auto;   /* 👈 مهم */
+  max-width: 1200px;
+
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+
+  position: relative;
+  z-index: 5;
+}
+
+/* open / closed badge */
+.open {
+  background: #d4f5df;
+  color: #1f9d55;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.closed {
+  background: #ffe2e2;
+  color: #d63031;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* CONTAINER */
+.rd-container {
+  max-width: 1200px;
+  margin: 40px auto 0 auto;
+  padding: 0 20px;
+}
+
+/* MENU GRID */
+.rd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* CARD */
+.rd-card {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+  transition: all 0.25s ease;
+}
+
+.rd-card:hover {
+  transform: translateY(-5px);
+}
+
+.rd-card.disabled {
+  opacity: 0.6;
+}
+
+.rd-card-content h3 {
+  margin: 0 0 10px 0;
+}
+
+.rd-small-info {
+  font-size: 13px;
+  margin-top: 8px;
+  color: #777;
+}
+
+.rd-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.rd-card-footer button {
+  background: #ff6b35;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.rd-card-footer button:hover {
+  background: #ff4d00;
+}
+
+.rd-card-footer button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* loading */
+.rd-loading {
+  padding: 100px;
+  text-align: center;
+  font-size: 20px;
+}
+.rd-section-title{
+  margin-bottom: 20px;
+}

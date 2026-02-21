@@ -2,12 +2,11 @@ import math
 from datetime import timedelta
 
 from django.utils import timezone
-from core.tasks import create_notification, print_order_receipt,auto_cancel_unpaid_order
+from core.tasks import create_notification, print_order_receipt, auto_cancel_unpaid_order
 
 from django.contrib.gis.geos import Point
 from rest_framework import serializers
 from .models import *
-
 
 
 def haversine_km(lon1, lat1, lon2, lat2):
@@ -15,9 +14,10 @@ def haversine_km(lon1, lat1, lon2, lat2):
     lon1, lat1, lon2, lat2 = map(math.radians, [lon1, lat1, lon2, lat2])
     dlon = lon2 - lon1
     dlat = lat2 - lat1
-    a = math.sin(dlat/2)**2 + math.cos(lat1)*math.cos(lat2)*math.sin(dlon/2)**2
-    c = 2*math.asin(math.sqrt(a))
+    a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+    c = 2 * math.asin(math.sqrt(a))
     return R * c
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -34,13 +34,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             is_restaurant=validated_data.get('is_restaurant', False)
         )
         return user
-
-
-class RestaurantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Restaurant
-        fields = '__all__'
-
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -67,6 +60,7 @@ class OrderSerializer(serializers.ModelSerializer):
         choices=[('cash', 'Cash'), ('online', 'Online')],
         write_only=True
     )
+
     class Meta:
         model = Order
         fields = '__all__'
@@ -75,7 +69,6 @@ class OrderSerializer(serializers.ModelSerializer):
             'delivery_address': {'required': False},
 
         }
-
 
     def create(self, validated_data):
         items_data = validated_data.pop('items')
@@ -151,11 +144,28 @@ class MenuItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class OwnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+
+class RestaurantSerializer(serializers.ModelSerializer):
+    menu = MenuItemSerializer(many=True, read_only=True)  # <--- اینجا nested
+    owner = OwnerSerializer(read_only=True)  # اطلاعات صاحب
+
+    class Meta:
+        model = Restaurant
+        fields = ['id', 'name', 'description',
+                  'address', 'location', 'owner',
+                  'menu','delivery_radius_m',
+                  'base_prep_time_min','rate','img','is_open']
+
+
 class TableReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = TableReservation
         fields = '__all__'
-
 
 
 class NotificationSerializer(serializers.ModelSerializer):

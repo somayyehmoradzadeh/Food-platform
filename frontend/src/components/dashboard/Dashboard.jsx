@@ -6,6 +6,7 @@ import Notifications from "./Notifications";
 import Reservation from "./Reservations.jsx";
 import { Bar } from "react-chartjs-2";
 import "./Dashboard.css";
+import {Link} from "react-router-dom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -142,7 +143,9 @@ export default class Dashboard extends React.Component {
               <h4>Recent Activity</h4>
               <p className="muted">Quick actions and summary — wire endpoints where needed</p>
               <div className="actions">
-                <button className="btn-primary">New Order</button>
+                <Link to="/restaurants" className="btn-primary">New Order
+
+                </Link>
                 <button className="btn-outline">Make Payment</button>
                 <button className="btn-outline" onClick={() => this.setActive("notifications")}>View Notifications</button>
               </div>
@@ -162,7 +165,8 @@ export default class Dashboard extends React.Component {
             <h3>Recent Activity</h3>
             <p className="muted">Actions and shortcuts</p>
             <div className="actions">
-              <button className="btn-primary">New Order</button>
+              <Link to="/restaurants" className="btn-primary">New Order
+                </Link>
               <button className="btn-outline">Make Payment</button>
               <button className="btn-outline" onClick={() => this.setActive("orders")}>Order History</button>
             </div>

@@ -12,6 +12,22 @@ class User(AbstractUser):
         return self.username
 
 
+class Category(models.Model):
+    restaurant = models.ForeignKey(
+        'Restaurant',
+        on_delete=models.CASCADE,
+        related_name='categories'
+    )
+    name = models.CharField(max_length=200)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.restaurant.name} - {self.name}"
+
+
 class Restaurant(models.Model):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -33,22 +49,6 @@ class Restaurant(models.Model):
         return self.name
 
 
-class Category(models.Model):
-    restaurant = models.ForeignKey(
-        'Restaurant',
-        on_delete=models.CASCADE,
-        related_name='categories'
-    )
-    name = models.CharField(max_length=200)
-    order = models.PositiveIntegerField(default=0)
-
-    class Meta:
-        ordering = ['order']
-
-    def __str__(self):
-        return f"{self.restaurant.name} - {self.name}"
-
-
 class MenuItem(models.Model):
     category = models.ForeignKey(
         Category,
@@ -58,6 +58,7 @@ class MenuItem(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='menu')
     is_available = models.BooleanField(default=True)
     prep_time_min = models.PositiveIntegerField(default=15)
     created_at = models.DateTimeField(auto_now_add=True)
