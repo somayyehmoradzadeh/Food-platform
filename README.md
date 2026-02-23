@@ -20,6 +20,14 @@ This README explains step-by-step how to run the full project locally and with D
 ![Dashboard](backend/screenshots/dashboard.png)
 
 
+### Resturant
+![Resturant](backend/screenshots/resturant.png)
+
+
+### Order food
+![Order food](backend/screenshots/food-order.png)
+
+
 Quick overview
 
 Backend: Django + Django REST Framework, JWT auth (SimpleJWT)
@@ -241,4 +249,5 @@ Check Celery tasks endpoint (if implemented):
 ```bash
 curl http://127.0.0.1:8000/api/notifications/unread_count/ -H "Authorization: Bearer <ACCESS_TOKEN>"
 ```
+
 
